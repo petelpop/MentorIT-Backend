@@ -3,7 +3,6 @@ package config
 import (
 	"fmt"
 	"log"
-	"os"
 
 	"github.com/joho/godotenv"
 	"gorm.io/driver/mysql"
@@ -17,10 +16,7 @@ func ConnectDatabase()  {
 		log.Println("Error loading .env file")
 	}
 
-	host := os.Getenv("DB_HOST")
-	port := os.Getenv("DB_PORT")
-	user := os.Getenv("DB_USER")
-	name := os.Getenv("DB_NAME")
+
 
 	dsn := fmt.Sprintf("%s:@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", user, host, port, name)
 

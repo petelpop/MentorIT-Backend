@@ -1,5 +1,7 @@
 package main
 
-func main()  {
-	
+import "MentorIT-Backend/config"
+
+func main() {
+	config.ConnectDatabase()
 }

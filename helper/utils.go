@@ -14,6 +14,14 @@ type Claims struct {
 	jwt.RegisteredClaims
 }
 
+type UserRole string
+
+const (
+    Admin   UserRole = "admin"
+    Student UserRole = "student"
+    Teacher UserRole = "teacher"
+)
+
 func HashPassword(password string) (string, error) {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
 	return string(bytes), err

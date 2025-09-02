@@ -28,7 +28,7 @@ func ConnectDatabase()  {
 
 	database.AutoMigrate(
 		&models.User{},
-		&models.Class{},
+		&models.Token{},
 	)
 
 	DB = database

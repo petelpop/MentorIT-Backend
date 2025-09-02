@@ -9,8 +9,8 @@ import (
 )
 
 type Claims struct {
-	userID uint `json:"user_id"`
-	role string `json:"role"`
+	UserID uint `json:"user_id"`
+	Role string `json:"role"`
 	jwt.RegisteredClaims
 }
 
@@ -26,8 +26,8 @@ func CheckPasswordHash(password, hash string) bool {
 
 func GenerateTokens(userID uint, role string) (accessToken string, refreshToken string, err error) {
 	atClaims := &Claims{
-		userID: userID,
-		role: role,
+		UserID: userID,
+		Role: role,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(15 * time.Minute)),
 		},
@@ -39,8 +39,8 @@ func GenerateTokens(userID uint, role string) (accessToken string, refreshToken 
 	}
 
 	rtClaims := &Claims{
-		userID: userID,
-		role: role,
+		UserID: userID,
+		Role: role,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(7 * 24 * time.Hour)),
 		},

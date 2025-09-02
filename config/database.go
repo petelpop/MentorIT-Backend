@@ -1,6 +1,7 @@
 package config
 
 import (
+	"MentorIT-Backend/models"
 	"fmt"
 	"log"
 
@@ -24,6 +25,11 @@ func ConnectDatabase()  {
 	if err != nil {
 		log.Fatal("Failed to connect to database: ", err)
 	}
+
+	database.AutoMigrate(
+		&models.User{},
+		&models.Class{},
+	)
 
 	DB = database
 }

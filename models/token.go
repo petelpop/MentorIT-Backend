@@ -2,12 +2,10 @@ package models
 
 import (
 	"time"
-
-	"gorm.io/gorm"
 )
 
 type Token struct {
-	gorm.Model
+	Id           uint      `json:"id" gorm:"primaryKey"`
 	UserID       uint      `gorm:"not null"`
 	User         *User     `gorm:"foreignKey:UserID;constraint:OnDelete:CASCADE" json:"user_data"`
 	AccessToken  string    `json:"access_token" gorm:"unique;not null"`

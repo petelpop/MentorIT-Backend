@@ -1,4 +1,4 @@
-package controllers
+package authcontroller
 
 import (
 	"MentorIT-Backend/config"
@@ -55,7 +55,7 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	accessToken, refreshToken, err := helper.GenerateTokens(user.ID, user.Role)
+	accessToken, refreshToken, err := helper.GenerateTokens(user.Id, user.Role)
 
 	if err != nil {
 		c.JSON(500, models.Response{
@@ -65,7 +65,7 @@ func Register(c *gin.Context) {
 	}
 
 	token := models.Token{
-		UserID:       user.ID,
+		UserID:       user.Id,
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 		ExpiresAt:    time.Now().Add(15 * time.Minute),
@@ -75,7 +75,7 @@ func Register(c *gin.Context) {
 	c.JSON(200, models.Response{
 		Message: "user registered successfully",
 		Data: UserResponse{
-			Id:           user.ID,
+			Id:           user.Id,
 			Name:         user.Name,
 			Username:     user.Username,
 			Email:        user.Email,
@@ -113,7 +113,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	accessToken, refreshToken, err := helper.GenerateTokens(user.ID, user.Role)
+	accessToken, refreshToken, err := helper.GenerateTokens(user.Id, user.Role)
 
 	if err != nil {
 		c.JSON(500, models.Response{
@@ -123,14 +123,14 @@ func Login(c *gin.Context) {
 	}
 
 	var token models.Token
-	if err := config.DB.Where("user_id = ?", user.ID).First(&token).Error; err != nil {
+	if err := config.DB.Where("user_id = ?", user.Id).First(&token).Error; err != nil {
 		token.AccessToken = accessToken
 		token.RefreshToken = refreshToken
 		token.ExpiresAt = time.Now().Add(15 * time.Minute)
 		config.DB.Save(&token)
 	} else {
 		token = models.Token{
-			UserID:       user.ID,
+			UserID:       user.Id,
 			AccessToken:  accessToken,
 			RefreshToken: refreshToken,
 			ExpiresAt:    time.Now().Add(15 * time.Minute),
@@ -141,7 +141,7 @@ func Login(c *gin.Context) {
 	c.JSON(200, models.Response{
 		Message: "login successful",
 		Data: UserResponse{
-			Id:           user.ID,
+			Id:           user.Id,
 			Username:     user.Username,
 			Email:        user.Email,
 			Role:         user.Role,

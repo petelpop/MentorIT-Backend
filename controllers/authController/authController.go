@@ -16,7 +16,7 @@ type UserResponse struct {
 	Email        string    `json:"email"`
 	Role         string    `json:"role"`
 	Exp          int       `json:"exp"`
-	AccessToken  string    `json:"access_token`
+	AccessToken  string    `json:"access_token"`
 	RefreshToken string    `json:"refresh_token"`
 	ExpiresAt    time.Time `json:"expires_at"`
 }

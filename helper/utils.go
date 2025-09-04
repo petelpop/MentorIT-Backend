@@ -33,6 +33,7 @@ func CheckPasswordHash(password, hash string) bool {
 }
 
 func GenerateTokens(userID uint, role string) (accessToken string, refreshToken string, err error) {
+
 	atClaims := &Claims{
 		UserID: userID,
 		Role: role,

@@ -3,6 +3,7 @@ package routes
 import (
 	authcontroller "MentorIT-Backend/controllers/authController"
 	classcategorycontroller "MentorIT-Backend/controllers/classCategoryController"
+	classcontroller "MentorIT-Backend/controllers/classController"
 	"MentorIT-Backend/middleware"
 
 	"github.com/gin-gonic/gin"
@@ -22,6 +23,8 @@ func SetupRoutes(r *gin.Engine) {
 	// Class Routes
 	classRoutes := apiRoutes.Group("/classes")
 
+	classRoutes.POST("/create", middleware.AuthMiddleware("admin", "teacher"), classcontroller.Create)
+
 	// Class category routes
 	classRoutes.GET("/category", classcategorycontroller.Index)
 	classRoutes.GET("/category/:id", classcategorycontroller.Show)
@@ -30,6 +33,5 @@ func SetupRoutes(r *gin.Engine) {
 	classRoutes.POST("/category", middleware.AuthMiddleware("admin"), classcategorycontroller.Create)
 	classRoutes.PUT("/category/:id", middleware.AuthMiddleware("admin"), classcategorycontroller.Update)
 	classRoutes.DELETE("/category/:id", middleware.AuthMiddleware("admin"), classcategorycontroller.Delete)
-
 	
 }

@@ -12,6 +12,25 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func Index(c *gin.Context)  {
+	var classes []models.Class
+
+	config.DB.Find(&classes)
+	c.JSON(200, models.Response{
+		Message: "Data successfully loaded",
+		Data: classes,
+	})
+}
+
+func Show(c *gin.Context)  {
+	
+}
+
+func IndexByCategory(c *gin.Context)  {
+	
+}
+
+
 // Admin, Teacher
 func Create(c *gin.Context) {
 	var input models.Class

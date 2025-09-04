@@ -4,13 +4,19 @@ import (
 	authcontroller "MentorIT-Backend/controllers/authController"
 	classcategorycontroller "MentorIT-Backend/controllers/classCategoryController"
 	classcontroller "MentorIT-Backend/controllers/classController"
+	"MentorIT-Backend/helper"
 	"MentorIT-Backend/middleware"
 
 	"github.com/gin-gonic/gin"
 )
 
+
 func SetupRoutes(r *gin.Engine) {
-	apiRoutes := r.Group("/api")
+	student := string(helper.Student)
+	teacher := string(helper.Teacher)
+	admin := string(helper.Admin)
+
+	apiRoutes := r.Group("/api")  
 
 	// Auth routes
 	authRoutes := apiRoutes.Group("/auth")
@@ -23,16 +29,19 @@ func SetupRoutes(r *gin.Engine) {
 	// Class Routes
 	classRoutes := apiRoutes.Group("/classes")
 
-	classRoutes.POST("/create", middleware.AuthMiddleware("admin", "teacher"), classcontroller.Create)
-	classRoutes.PUT("/update/:id", middleware.AuthMiddleware("admin", "teacher"), classcontroller.Update)
+	classRoutes.GET("/class", middleware.AuthMiddleware(student, teacher, admin), classcontroller.Index)
+
+	// Admin & teachers only
+	classRoutes.POST("/create", middleware.AuthMiddleware(admin, teacher), classcontroller.Create)
+	classRoutes.PUT("/update/:id", middleware.AuthMiddleware(admin, teacher), classcontroller.Update)
 
 	// Class category routes
 	classRoutes.GET("/category", classcategorycontroller.Index)
 	classRoutes.GET("/category/:id", classcategorycontroller.Show)
 	
 	// Admin only
-	classRoutes.POST("/category", middleware.AuthMiddleware("admin"), classcategorycontroller.Create)
-	classRoutes.PUT("/category/:id", middleware.AuthMiddleware("admin"), classcategorycontroller.Update)
-	classRoutes.DELETE("/category/:id", middleware.AuthMiddleware("admin"), classcategorycontroller.Delete)
+	classRoutes.POST("/category", middleware.AuthMiddleware(admin), classcategorycontroller.Create)
+	classRoutes.PUT("/category/:id", middleware.AuthMiddleware(admin), classcategorycontroller.Update)
+	classRoutes.DELETE("/category/:id", middleware.AuthMiddleware(admin), classcategorycontroller.Delete)
 	
 }

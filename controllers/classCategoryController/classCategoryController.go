@@ -19,7 +19,7 @@ func Index(c *gin.Context) {
 
 	config.DB.Find(&categories)
 	c.JSON(200, models.Response{
-		Message: "Success",
+		Message: "Data successfully loaded",
 		Data:    categories,
 	})
 }

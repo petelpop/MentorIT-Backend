@@ -24,6 +24,7 @@ func SetupRoutes(r *gin.Engine) {
 	classRoutes := apiRoutes.Group("/classes")
 
 	classRoutes.POST("/create", middleware.AuthMiddleware("admin", "teacher"), classcontroller.Create)
+	classRoutes.PUT("/update/:id", middleware.AuthMiddleware("admin", "teacher"), classcontroller.Update)
 
 	// Class category routes
 	classRoutes.GET("/category", classcategorycontroller.Index)

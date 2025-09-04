@@ -152,7 +152,7 @@ func Update(c *gin.Context) {
 			})
 			return
 		}
-	}
+	
 
 	ext := strings.ToLower(filepath.Ext(file.Filename))
 	if ext != ".jpg" && ext != ".jpeg" && ext != ".png" {
@@ -182,7 +182,8 @@ func Update(c *gin.Context) {
 		return
 	}
 	category.Icon = filename
-
+	}
+	
 	if err := config.DB.Save(&category).Error; err != nil {
 		c.AbortWithStatusJSON(500, models.Response{
 			Message: err.Error(),

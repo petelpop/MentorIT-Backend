@@ -256,3 +256,28 @@ func Update(c *gin.Context) {
 	})
 
 }
+
+func Delete(c *gin.Context) {
+	var class models.Class
+
+	idParam := c.Param("id")
+
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		c.AbortWithStatusJSON(400, models.Response{
+			Message: "Invalid ID",
+		})
+		return
+	}
+
+	if config.DB.Delete(&class, id).RowsAffected == 0 {
+		c.AbortWithStatusJSON(400, models.Response{
+			Message: "Delete Failed",
+		})
+		return
+	}
+
+	c.JSON(200, models.Response{
+		Message: "Data successfully deleted",
+	})
+}

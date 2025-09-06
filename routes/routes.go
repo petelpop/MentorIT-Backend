@@ -35,6 +35,7 @@ func SetupRoutes(r *gin.Engine) {
 	// Admin & teachers only
 	classRoutes.POST("/create", middleware.AuthMiddleware(admin, teacher), classcontroller.Create)
 	classRoutes.PUT("/update/:id", middleware.AuthMiddleware(admin, teacher), classcontroller.Update)
+	classRoutes.DELETE("/delete/:id", middleware.AuthMiddleware(admin, teacher), classcontroller.Delete)
 
 	// Class category routes
 	classRoutes.GET("/category", classcategorycontroller.Index)

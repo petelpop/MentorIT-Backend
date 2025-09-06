@@ -6,6 +6,8 @@ import (
 
 	"github.com/golang-jwt/jwt/v4"
 	"golang.org/x/crypto/bcrypt"
+	"golang.org/x/text/language"
+	"golang.org/x/text/message"
 )
 
 type Claims struct {
@@ -57,4 +59,9 @@ func GenerateTokens(userID uint, role string) (accessToken string, refreshToken 
 	rt := jwt.NewWithClaims(jwt.SigningMethodHS256, rtClaims)
 	refreshToken, err = rt.SignedString(config.JWTKey)
 	return
+}
+
+func FormatRupiah(amount int) string {
+	p := message.NewPrinter(language.Indonesian)
+	return p.Sprintf("Rp%d", amount)
 }

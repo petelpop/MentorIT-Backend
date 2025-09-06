@@ -2,34 +2,58 @@ package classcontroller
 
 import (
 	"MentorIT-Backend/config"
+	"MentorIT-Backend/helper"
 	"MentorIT-Backend/models"
 	"fmt"
 	"net/http"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
-func Index(c *gin.Context)  {
+func Index(c *gin.Context) {
 	var classes []models.Class
 
 	config.DB.Find(&classes)
 	c.JSON(200, models.Response{
 		Message: "Data successfully loaded",
-		Data: classes,
+		Data:    classes,
 	})
 }
 
-func Show(c *gin.Context)  {
-	
+func Show(c *gin.Context) {
+	var class models.Class
+
+	id := c.Param("id")
+
+	if err := config.DB.First(&class, id).Error; err != nil {
+		switch err {
+		case gorm.ErrRecordNotFound:
+			c.AbortWithStatusJSON(404, models.Response{
+				Message: "Data not found",
+			})
+			return
+		default:
+			c.AbortWithStatusJSON(500, models.Response{
+				Message: err.Error(),
+			})
+			return
+		}
+	}
+
+	c.JSON(200, models.Response{
+		Message: "Success",
+		Data:    class,
+	})
 }
 
-func IndexByCategory(c *gin.Context)  {
-	
-}
+func IndexByCategory(c *gin.Context) {
 
+}
 
 // Admin, Teacher
 func Create(c *gin.Context) {
@@ -38,13 +62,25 @@ func Create(c *gin.Context) {
 	title := c.PostForm("title")
 	description := c.PostForm("description")
 	categoryName := c.PostForm("category_name")
+	price := c.PostForm("price")
+	trailer := c.PostForm("trailer")
 
-	if title == "" || description == "" || categoryName == "" {
+	if title == "" || description == "" || categoryName == "" || price == "" || trailer == "" {
 		c.AbortWithStatusJSON(400, models.Response{
-			Message: "Title, Description, and Category Name are required",
+			Message: "Title, Description, Price, trailer / video, and Category Name are required",
 		})
 		return
 	}
+
+	priceInt, err := strconv.Atoi(price)
+	if err != nil {
+		c.AbortWithStatusJSON(400, models.Response{
+			Message: "Price must be an integer",
+		})
+		return
+	}
+
+	priceFormatted := helper.FormatRupiah(priceInt)
 
 	var category models.ClassCategory
 	if err := config.DB.Where("name = ?", categoryName).First(&category).Error; err != nil {
@@ -95,6 +131,9 @@ func Create(c *gin.Context) {
 	input.Thumbnail = filename
 	input.CategoryName = categoryName
 	input.ClassCategoryID = category.Id
+	input.FormattedPrice = priceFormatted
+	input.Trailer = trailer
+	input.Price = priceInt
 
 	if err := config.DB.Create(&input).Error; err != nil {
 		c.AbortWithStatusJSON(500, models.Response{
@@ -112,7 +151,9 @@ func Create(c *gin.Context) {
 func Update(c *gin.Context) {
 	id := c.Param("id")
 
+	var formattedPrice string
 	var class models.Class
+
 	if err := config.DB.First(&class, id).Error; err != nil {
 		c.AbortWithStatusJSON(404, models.Response{
 			Message: "class not found",
@@ -123,6 +164,8 @@ func Update(c *gin.Context) {
 	title := c.PostForm("title")
 	description := c.PostForm("description")
 	categoryName := c.PostForm("category_name")
+	price := c.PostForm("price")
+	trailer := c.PostForm("trailer")
 
 	if title != "" {
 		class.Title = title
@@ -130,6 +173,23 @@ func Update(c *gin.Context) {
 
 	if description != "" {
 		class.Description = description
+	}
+
+	if price != "" {
+		priceInt, err := strconv.Atoi(price)
+		if err != nil {
+			c.AbortWithStatusJSON(400, models.Response{
+				Message: "Price must be an integer",
+			})
+			return
+		}
+		class.Price = priceInt
+		formattedPrice = helper.FormatRupiah(priceInt)
+		class.FormattedPrice = formattedPrice
+	}
+
+	if trailer != "" {
+		class.Trailer = trailer
 	}
 
 	if categoryName != "" {

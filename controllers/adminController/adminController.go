@@ -16,6 +16,21 @@ type CreateTeacherInput struct {
 	Password string `json:"password" binding:"required"`
 }
 
+func ListTeachers(c *gin.Context)  {
+		var teachers []models.User
+
+	if err := config.DB.Where("role = ?", "teacher").Find(&teachers).Error; err != nil {
+		c.JSON(500, models.Response{
+			Message: "failed to fetch teachers",
+		})
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"teachers": teachers,
+	})
+}
+
 func CreateTeacher(c *gin.Context) {
 	var input CreateTeacherInput
 

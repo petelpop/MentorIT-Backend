@@ -31,6 +31,7 @@ func SetupRoutes(r *gin.Engine) {
 
 	classRoutes.GET("/class", middleware.AuthMiddleware(student, teacher, admin), classcontroller.Index)
 	classRoutes.GET("/class/:id", middleware.AuthMiddleware(student, teacher, admin), classcontroller.Show)
+	classRoutes.GET("/category/:id/class/", middleware.AuthMiddleware(student, teacher, admin), classcontroller.IndexByCategory)
 
 	// Admin & teachers only
 	classRoutes.POST("/create", middleware.AuthMiddleware(admin, teacher), classcontroller.Create)

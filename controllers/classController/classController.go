@@ -15,6 +15,11 @@ import (
 	"gorm.io/gorm"
 )
 
+type ClassByCategoryResponse struct {
+	CategoryName    string 			`json:"category_name"`
+	CategoryClasses []models.Class `json:"classes"`
+}
+
 func Index(c *gin.Context) {
 	var classes []models.Class
 
@@ -52,7 +57,23 @@ func Show(c *gin.Context) {
 }
 
 func IndexByCategory(c *gin.Context) {
+	categoryID := c.Param("id")
 
+	var category models.ClassCategory
+	if err := config.DB.Preload("Classes").First(&category, categoryID).Error; err != nil {
+		c.AbortWithStatusJSON(404, models.Response{
+			Message: "Category not found",
+		})
+		return
+	}
+
+	c.JSON(200, models.Response{
+		Message: "Successfully loaded",
+		Data: ClassByCategoryResponse{
+			CategoryName: category.Name,
+			CategoryClasses: category.Classes,
+		},
+	})
 }
 
 // Admin, Teacher

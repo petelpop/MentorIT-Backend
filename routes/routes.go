@@ -57,6 +57,7 @@ func SetupRoutes(r *gin.Engine) {
 	// Admin Routes
 	adminRoutes := apiRoutes.Group("/admin")
 	adminRoutes.GET("/list-teachers", middleware.AuthMiddleware(admin), admincontroller.ListTeachers)
+	adminRoutes.GET("/teacher/:id", middleware.AuthMiddleware(admin), admincontroller.GetTeacherByID)
 	adminRoutes.POST("/create-teacher", middleware.AuthMiddleware(admin), admincontroller.CreateTeacher)
 	adminRoutes.DELETE("/delete-teacher/:id", middleware.AuthMiddleware(admin), admincontroller.DeleteTeacher)
 }

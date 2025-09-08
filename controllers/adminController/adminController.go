@@ -16,8 +16,8 @@ type CreateTeacherInput struct {
 	Password string `json:"password" binding:"required"`
 }
 
-func ListTeachers(c *gin.Context)  {
-		var teachers []models.User
+func ListTeachers(c *gin.Context) {
+	var teachers []models.User
 
 	if err := config.DB.Where("role = ?", "teacher").Find(&teachers).Error; err != nil {
 		c.JSON(500, models.Response{
@@ -26,8 +26,25 @@ func ListTeachers(c *gin.Context)  {
 		return
 	}
 
-	c.JSON(200, gin.H{
-		"teachers": teachers,
+	c.JSON(200, models.Response{
+		Message: "Loaded List Teachers Successfully",
+		Data:    teachers,
+	})
+}
+
+func GetTeacherByID(c *gin.Context) {
+	id := c.Param("id")
+
+	var teacher models.User
+	if err := config.DB.Where("id = ? AND role = ?", id, "teacher").First(&teacher).Error; err != nil {
+		c.JSON(404, models.Response{
+			Message: "Teacher not found"})
+		return
+	}
+
+	c.JSON(200, models.Response{
+		Message: "Loaded Teacher Successfully",
+		Data:    teacher,
 	})
 }
 
@@ -64,9 +81,9 @@ func CreateTeacher(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, gin.H{
-		"message": "Teacher created successfully",
-		"user":    user,
+	c.JSON(200, models.Response{
+		Message: "Teacher created successfully",
+		Data:    user,
 	})
 }
 

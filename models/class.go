@@ -12,5 +12,4 @@ type Class struct {
 	ClassCategoryID uint           `gorm:"not null" json:"class_category_id"`
 	ClassCategory   *ClassCategory `gorm:"constraint:OnDelete:SET NULL;" json:"class_category"`
 	Users           []User         `gorm:"many2many:user_classes;" json:"users"`
-	// Mentor          []Mentor       `gorm:"many2many:mentor_classes;" json:"mentor"`
 }

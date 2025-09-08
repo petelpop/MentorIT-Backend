@@ -1,6 +1,7 @@
 package routes
 
 import (
+	admincontroller "MentorIT-Backend/controllers/adminController"
 	authcontroller "MentorIT-Backend/controllers/authController"
 	classcategorycontroller "MentorIT-Backend/controllers/classCategoryController"
 	classcontroller "MentorIT-Backend/controllers/classController"
@@ -26,6 +27,8 @@ func SetupRoutes(r *gin.Engine) {
 	authRoutes.POST("/refresh-token", authcontroller.RefreshToken)
 	authRoutes.GET("/logout", authcontroller.Logout)
 
+	//========================================================================================================
+
 	// Class Routes
 	classRoutes := apiRoutes.Group("/classes")
 
@@ -38,6 +41,8 @@ func SetupRoutes(r *gin.Engine) {
 	classRoutes.PUT("/update/:id", middleware.AuthMiddleware(admin, teacher), classcontroller.Update)
 	classRoutes.DELETE("/delete/:id", middleware.AuthMiddleware(admin, teacher), classcontroller.Delete)
 
+	//========================================================================================================
+
 	// Class category routes
 	classRoutes.GET("/category", classcategorycontroller.Index)
 	classRoutes.GET("/category/:id", classcategorycontroller.Show)
@@ -47,4 +52,9 @@ func SetupRoutes(r *gin.Engine) {
 	classRoutes.PUT("/category/:id", middleware.AuthMiddleware(admin), classcategorycontroller.Update)
 	classRoutes.DELETE("/category/:id", middleware.AuthMiddleware(admin), classcategorycontroller.Delete)
 	
+	//========================================================================================================
+
+	// Admin Routes
+	adminRoutes := apiRoutes.Group("/admin")
+	adminRoutes.POST("/create-teacher", middleware.AuthMiddleware(admin), admincontroller.CreateTeacher)
 }

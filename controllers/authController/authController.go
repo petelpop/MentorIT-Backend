@@ -76,8 +76,8 @@ func Register(c *gin.Context) {
 		Message: "user registered successfully",
 		Data: UserResponse{
 			Id:           user.Id,
-			Name:         user.Name,
 			Username:     user.Username,
+			Name:         user.Name,
 			Email:        user.Email,
 			Role:         user.Role,
 			Exp:          user.Exp,
@@ -143,6 +143,7 @@ func Login(c *gin.Context) {
 		Data: UserResponse{
 			Id:           user.Id,
 			Username:     user.Username,
+			Name:         user.Name,
 			Email:        user.Email,
 			Role:         user.Role,
 			AccessToken:  token.AccessToken,

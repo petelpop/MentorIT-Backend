@@ -8,8 +8,10 @@ import (
 )
 
 func main() {
+		
 	config.InitEnv()
 	config.ConnectDatabase()
+	config.InitMidtrans()
 
 	r := gin.Default()
 	routes.SetupRoutes(r)

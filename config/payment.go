@@ -8,5 +8,5 @@ import (
 var SnapClient snap.Client
 
 func InitMidtrans() {
-    SnapClient.New(midtransServerKey, midtrans.Sandbox)
+    SnapClient.New(MidtransSKey, midtrans.Sandbox)
 }

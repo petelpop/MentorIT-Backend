@@ -5,19 +5,19 @@ import (
 	authcontroller "MentorIT-Backend/controllers/authController"
 	classcategorycontroller "MentorIT-Backend/controllers/classCategoryController"
 	classcontroller "MentorIT-Backend/controllers/classController"
+	paymentcontroller "MentorIT-Backend/controllers/paymentController"
 	"MentorIT-Backend/helper"
 	"MentorIT-Backend/middleware"
 
 	"github.com/gin-gonic/gin"
 )
 
-
 func SetupRoutes(r *gin.Engine) {
 	student := string(helper.Student)
 	teacher := string(helper.Teacher)
 	admin := string(helper.Admin)
 
-	apiRoutes := r.Group("/api")  
+	apiRoutes := r.Group("/api")
 
 	// Auth routes
 	authRoutes := apiRoutes.Group("/auth")
@@ -36,6 +36,10 @@ func SetupRoutes(r *gin.Engine) {
 	classRoutes.GET("/class/:id", middleware.AuthMiddleware(student, teacher, admin), classcontroller.Show)
 	classRoutes.GET("/category/:id/class/", middleware.AuthMiddleware(student, teacher, admin), classcontroller.IndexByCategory)
 
+	// Payment
+	classRoutes.POST("/buy-class/:id", middleware.AuthMiddleware(student), paymentcontroller.BuyClass)
+	classRoutes.POST("/buy-class/notification", middleware.AuthMiddleware(student), paymentcontroller.PaymentNotification)
+
 	// Admin & teachers only
 	classRoutes.POST("/create", middleware.AuthMiddleware(admin, teacher), classcontroller.Create)
 	classRoutes.PUT("/update/:id", middleware.AuthMiddleware(admin, teacher), classcontroller.Update)
@@ -46,12 +50,12 @@ func SetupRoutes(r *gin.Engine) {
 	// Class category routes
 	classRoutes.GET("/category", classcategorycontroller.Index)
 	classRoutes.GET("/category/:id", classcategorycontroller.Show)
-	
+
 	// Admin only
 	classRoutes.POST("/category", middleware.AuthMiddleware(admin), classcategorycontroller.Create)
 	classRoutes.PUT("/category/:id", middleware.AuthMiddleware(admin), classcategorycontroller.Update)
 	classRoutes.DELETE("/category/:id", middleware.AuthMiddleware(admin), classcategorycontroller.Delete)
-	
+
 	//========================================================================================================
 
 	// Admin Routes
@@ -60,4 +64,13 @@ func SetupRoutes(r *gin.Engine) {
 	adminRoutes.GET("/teacher/:id", middleware.AuthMiddleware(admin), admincontroller.GetTeacherByID)
 	adminRoutes.POST("/create-teacher", middleware.AuthMiddleware(admin), admincontroller.CreateTeacher)
 	adminRoutes.DELETE("/delete-teacher/:id", middleware.AuthMiddleware(admin), admincontroller.DeleteTeacher)
+
+	//========================================================================================================
 }
+
+// func WebhookRoutes(r *gin.Engine) {
+// 	student := string(helper.Student)
+
+// 	r.POST("/api/classes/buy-class/notification", middleware.AuthMiddleware(student), paymentcontroller.PaymentNotification)
+
+// }

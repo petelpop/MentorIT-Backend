@@ -31,6 +31,7 @@ func ConnectDatabase()  {
 		&models.Token{},
 		&models.ClassCategory{},
 		&models.Class{},
+		&models.Transaction{},
 	)
 
 	DB = database

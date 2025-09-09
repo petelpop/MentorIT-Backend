@@ -5,7 +5,49 @@ import (
 	"MentorIT-Backend/models"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
+
+func GetModules(c *gin.Context) {
+	classID := c.Param("class_id")
+
+	var modules []models.Module
+	if err := config.DB.Preload("SubMods", func() *gorm.DB {
+			return config.DB.Order("sub_modules.order ASC")
+		}).
+		Where("class_id = ?", classID).
+		Order("modules.order ASC").
+		Find(&modules).Error; err != nil {
+		c.JSON(500, models.Response{
+			Message: err.Error()})
+		return
+	}
+
+	c.JSON(200, models.Response{
+		Message: "Loaded modules successfully",
+		Data: modules,
+	})
+}
+
+func GetModuleDetail(c *gin.Context) {
+	id := c.Param("id")
+
+	var module models.Module
+	if err := config.DB.
+		Preload("SubMods", func(db *gorm.DB) *gorm.DB {
+			return db.Order("sub_modules.order ASC")
+		}).
+		First(&module, id).Error; err != nil {
+		c.JSON(404, models.Response{
+			Message: "Module not found"})
+		return
+	}
+
+	c.JSON(200, models.Response{
+		Message: "Module loaded successfully",
+		Data: module,
+	})
+}
 
 func CreateModule(c *gin.Context) {
 	var module models.Module
@@ -55,6 +97,12 @@ func UpdateModule(c *gin.Context) {
 	if err := c.ShouldBindJSON(&module); err != nil {
 		c.JSON(400, models.Response{
 			Message: err.Error()})
+		return
+	}
+
+	if module.Title == "" {
+		c.JSON(400, models.Response{
+			Message: "title, content, and description cannot be empty"})
 		return
 	}
 

@@ -11,7 +11,8 @@ var JWTKey []byte
 var host string
 var port string
 var user string
-var name string	
+var name string
+var midtransServerKey string
 
 func InitEnv() {
 
@@ -20,6 +21,7 @@ func InitEnv() {
 	}
 
 	JWTKey = []byte(os.Getenv("JWT_SECRET"))
+	midtransServerKey = os.Getenv("MIDTRANS_SERVER_KEY")
 	host = os.Getenv("DB_HOST")
 	port = os.Getenv("DB_PORT")
 	user = os.Getenv("DB_USER")

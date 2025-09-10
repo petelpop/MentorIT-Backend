@@ -5,7 +5,9 @@ import (
 	authcontroller "MentorIT-Backend/controllers/authController"
 	classcategorycontroller "MentorIT-Backend/controllers/classCategoryController"
 	classcontroller "MentorIT-Backend/controllers/classController"
+	modulecontroller "MentorIT-Backend/controllers/moduleController"
 	paymentcontroller "MentorIT-Backend/controllers/paymentController"
+	submodulecontroller "MentorIT-Backend/controllers/subModuleController"
 	"MentorIT-Backend/helper"
 	"MentorIT-Backend/middleware"
 
@@ -36,14 +38,32 @@ func SetupRoutes(r *gin.Engine) {
 	classRoutes.GET("/class/:id", middleware.AuthMiddleware(student, teacher, admin), classcontroller.Show)
 	classRoutes.GET("/category/:id/class/", middleware.AuthMiddleware(student, teacher, admin), classcontroller.IndexByCategory)
 
+	// Admin & teachers only ( Manage Class )
+	classRoutes.POST("/create", middleware.AuthMiddleware(admin, teacher), classcontroller.Create)
+	classRoutes.PUT("/update/:id", middleware.AuthMiddleware(admin, teacher), classcontroller.Update)
+	classRoutes.DELETE("/delete/:id", middleware.AuthMiddleware(admin, teacher), classcontroller.Delete)
+
 	// Payment
 	classRoutes.POST("/buy-class/:id", middleware.AuthMiddleware(student), paymentcontroller.BuyClass)
 	classRoutes.POST("/buy-class/notification", middleware.AuthMiddleware(student), paymentcontroller.PaymentNotification)
 
-	// Admin & teachers only
-	classRoutes.POST("/create", middleware.AuthMiddleware(admin, teacher), classcontroller.Create)
-	classRoutes.PUT("/update/:id", middleware.AuthMiddleware(admin, teacher), classcontroller.Update)
-	classRoutes.DELETE("/delete/:id", middleware.AuthMiddleware(admin, teacher), classcontroller.Delete)
+	// Module
+	classRoutes.GET("/modules/:id", middleware.AuthMiddleware(student, teacher), modulecontroller.GetModules)
+	classRoutes.GET("/module/:id", middleware.AuthMiddleware(student, teacher), modulecontroller.GetModuleDetail)
+
+	// Admin & teachers only ( Manage Module )
+	classRoutes.POST("/create/module", middleware.AuthMiddleware(teacher, admin), modulecontroller.CreateModule)
+	classRoutes.PUT("/edit/module/:id", middleware.AuthMiddleware(teacher, admin), modulecontroller.UpdateModule)
+	classRoutes.DELETE("/delete/module/:id", middleware.AuthMiddleware(teacher, admin), modulecontroller.DeleteModule)
+
+	// Sub-Module
+	classRoutes.GET("/sub-modules/:id", middleware.AuthMiddleware(student, teacher), submodulecontroller.GetSubModules)
+	classRoutes.GET("/sub-module/:id", middleware.AuthMiddleware(student, teacher), submodulecontroller.GetSubModuleDetail)
+
+	// Admin & teachers only ( Manage Sub-Module )
+	classRoutes.POST("/create/sub-module", middleware.AuthMiddleware(teacher, admin), submodulecontroller.CreateSubModule)
+	classRoutes.PUT("/edit/sub-module/:id", middleware.AuthMiddleware(teacher, admin), submodulecontroller.UpdateSubModule)
+	classRoutes.DELETE("/delete/sub-module/:id", middleware.AuthMiddleware(teacher, admin), submodulecontroller.DeleteSubModule)
 
 	//========================================================================================================
 

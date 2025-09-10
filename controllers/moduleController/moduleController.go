@@ -13,8 +13,8 @@ func GetModules(c *gin.Context) {
 
 	var modules []models.Module
 	if err := config.DB.Preload("SubMods", func() *gorm.DB {
-			return config.DB.Order("sub_modules.order ASC")
-		}).
+		return config.DB.Order("sub_modules.order ASC")
+	}).
 		Where("class_id = ?", classID).
 		Order("modules.order ASC").
 		Find(&modules).Error; err != nil {
@@ -25,7 +25,7 @@ func GetModules(c *gin.Context) {
 
 	c.JSON(200, models.Response{
 		Message: "Loaded modules successfully",
-		Data: modules,
+		Data:    modules,
 	})
 }
 
@@ -45,7 +45,7 @@ func GetModuleDetail(c *gin.Context) {
 
 	c.JSON(200, models.Response{
 		Message: "Module loaded successfully",
-		Data: module,
+		Data:    module,
 	})
 }
 
@@ -71,7 +71,7 @@ func CreateModule(c *gin.Context) {
 		Select("COALESCE(MAX(`order`), 0)").
 		Scan(&maxOrder)
 
-	module.Order = maxOrder + 1 
+	module.Order = maxOrder + 1
 
 	if err := config.DB.Create(&module).Error; err != nil {
 		c.JSON(500, models.Response{
@@ -87,7 +87,7 @@ func UpdateModule(c *gin.Context) {
 	id := c.Param("id")
 
 	var module models.Module
-	
+
 	if err := config.DB.First(&module, id).Error; err != nil {
 		c.JSON(404, models.Response{
 			Message: "Module not found"})

@@ -7,6 +7,41 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func GetSubModules(c *gin.Context) {
+	moduleID := c.Param("module_id")
+
+	var submodules []models.SubModule
+	if err := config.DB.
+		Where("module_id = ?", moduleID).
+		Order("sub_modules.order ASC").
+		Find(&submodules).Error; err != nil {
+		c.JSON(500, models.Response{
+			Message: err.Error()})
+		return
+	}
+
+	c.JSON(200, models.Response{
+		Message: "SubModules loaded successfully",
+		Data: submodules,
+	})
+}
+
+func GetSubModuleDetail(c *gin.Context) {
+	id := c.Param("id")
+
+	var submodule models.SubModule
+	if err := config.DB.First(&submodule, id).Error; err != nil {
+		c.JSON(404, models.Response{
+			Message: "SubModule not found"})
+		return
+	}
+
+	c.JSON(200, models.Response{
+		Message: "SubModule loaded successfully",
+		Data: submodule,
+	})
+}
+
 func CreateSubModule(c *gin.Context) {
 	var subModule models.SubModule
 

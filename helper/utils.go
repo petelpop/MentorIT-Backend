@@ -40,7 +40,7 @@ func GenerateTokens(userID uint, role string) (accessToken string, refreshToken 
 		UserID: userID,
 		Role: role,
 		RegisteredClaims: jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(15 * time.Minute)),
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(1000000 * time.Hour)),
 		},
 	}
 	at := jwt.NewWithClaims(jwt.SigningMethodHS256, atClaims)

@@ -56,14 +56,14 @@ func SetupRoutes(r *gin.Engine) {
 	classRoutes.PUT("/edit/module/:id", middleware.AuthMiddleware(teacher, admin), modulecontroller.UpdateModule)
 	classRoutes.DELETE("/delete/module/:id", middleware.AuthMiddleware(teacher, admin), modulecontroller.DeleteModule)
 
-	// Sub-Module
-	classRoutes.GET("/sub-modules/:id", middleware.AuthMiddleware(student, teacher), submodulecontroller.GetSubModules)
-	classRoutes.GET("/sub-module/:id", middleware.AuthMiddleware(student, teacher), submodulecontroller.GetSubModuleDetail)
+	// Sub-Module	
+	classRoutes.GET("/item-modules/:id", middleware.AuthMiddleware(student, teacher), submodulecontroller.GetModuleItems)
+	classRoutes.GET("/item-module/:id", middleware.AuthMiddleware(student, teacher), submodulecontroller.GetModuleItemDetail)
 
-	// Admin & teachers only ( Manage Sub-Module )
-	classRoutes.POST("/create/sub-module", middleware.AuthMiddleware(teacher, admin), submodulecontroller.CreateSubModule)
-	classRoutes.PUT("/edit/sub-module/:id", middleware.AuthMiddleware(teacher, admin), submodulecontroller.UpdateSubModule)
-	classRoutes.DELETE("/delete/sub-module/:id", middleware.AuthMiddleware(teacher, admin), submodulecontroller.DeleteSubModule)
+	// Admin & teachers only ( Manage Item-Module )
+	classRoutes.POST("/create/item-module", middleware.AuthMiddleware(teacher, admin), submodulecontroller.CreateModuleItem)
+	classRoutes.PUT("/edit/item-module/:id", middleware.AuthMiddleware(teacher, admin), submodulecontroller.UpdateModuleItem)
+	classRoutes.DELETE("/delete/item-module/:id", middleware.AuthMiddleware(teacher, admin), submodulecontroller.DeleteModuleItem)
 
 	//========================================================================================================
 

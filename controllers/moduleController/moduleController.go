@@ -9,13 +9,13 @@ import (
 )
 
 func GetModules(c *gin.Context) {
-	classID := c.Param("class_id")
+	classID := c.Param("id")
 
 	var modules []models.Module
-	if err := config.DB.Preload("SubMods", func() *gorm.DB {
-		return config.DB.Order("sub_modules.order ASC")
+	if err := config.DB.Preload("ModuleItem", func(db *gorm.DB) *gorm.DB {
+		return db.Order("module_items.order ASC")
 	}).
-		Where("class_id = ?", classID).
+		Where("class_id = ?", classID). 
 		Order("modules.order ASC").
 		Find(&modules).Error; err != nil {
 		c.JSON(500, models.Response{
@@ -34,8 +34,8 @@ func GetModuleDetail(c *gin.Context) {
 
 	var module models.Module
 	if err := config.DB.
-		Preload("SubMods", func(db *gorm.DB) *gorm.DB {
-			return db.Order("sub_modules.order ASC")
+		Preload("ModuleItem", func(db *gorm.DB) *gorm.DB {
+			return db.Order("module_items.order ASC")
 		}).
 		First(&module, id).Error; err != nil {
 		c.JSON(404, models.Response{

@@ -1,8 +1,9 @@
 package models
 
-type SubModule struct {
+type ProjectPage struct {
 	Id          uint   `json:"id" gorm:"primaryKey"`
+	ModuleID    uint   `json:"module_id"`
 	Title       string `json:"title"`
 	Description string `json:"description"`
-	Content     string `json:"content"`
+	Guide       string `json:"guide"`
 }

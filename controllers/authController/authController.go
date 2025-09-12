@@ -126,14 +126,14 @@ func Login(c *gin.Context) {
 	if err := config.DB.Where("user_id = ?", user.Id).First(&token).Error; err != nil {
 		token.AccessToken = accessToken
 		token.RefreshToken = refreshToken
-		token.ExpiresAt = time.Now().Add(15 * time.Minute)
+		token.ExpiresAt = time.Now().Add(1000000 * time.Hour)
 		config.DB.Save(&token)
 	} else {
 		token = models.Token{
 			UserID:       user.Id,
 			AccessToken:  accessToken,
 			RefreshToken: refreshToken,
-			ExpiresAt:    time.Now().Add(15 * time.Minute),
+			ExpiresAt:    time.Now().Add(1000000 * time.Hour),
 		}
 		config.DB.Create(&token)
 	}
@@ -182,7 +182,7 @@ func RefreshToken(c *gin.Context) {
 
 	token.AccessToken = accessToken
 	token.RefreshToken = newRefreshToken
-	token.ExpiresAt = time.Now().Add(15 * time.Minute)
+	token.ExpiresAt = time.Now().Add(1000000 * time.Hour)
 	config.DB.Save(&token)
 
 	c.JSON(200, models.Response{

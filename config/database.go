@@ -32,6 +32,14 @@ func ConnectDatabase()  {
 		&models.ClassCategory{},
 		&models.Class{},
 		&models.Transaction{},
+		&models.Class{},
+		&models.Module{},
+		&models.ModuleItem{},
+		&models.SubModule{},
+		&models.Quiz{},
+		&models.QuizQuestion{},
+		&models.FinalProject{},
+		&models.ProjectPage{},
 	)
 
 	DB = database

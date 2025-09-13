@@ -5,9 +5,10 @@ import (
 	authcontroller "MentorIT-Backend/controllers/authController"
 	classcategorycontroller "MentorIT-Backend/controllers/classCategoryController"
 	classcontroller "MentorIT-Backend/controllers/classController"
+	submodulecontroller "MentorIT-Backend/controllers/itemModuleController"
+	leaderboardcontroller "MentorIT-Backend/controllers/leaderboardController"
 	modulecontroller "MentorIT-Backend/controllers/moduleController"
 	paymentcontroller "MentorIT-Backend/controllers/paymentController"
-	submodulecontroller "MentorIT-Backend/controllers/subModuleController"
 	"MentorIT-Backend/helper"
 	"MentorIT-Backend/middleware"
 
@@ -56,7 +57,7 @@ func SetupRoutes(r *gin.Engine) {
 	classRoutes.PUT("/edit/module/:id", middleware.AuthMiddleware(teacher, admin), modulecontroller.UpdateModule)
 	classRoutes.DELETE("/delete/module/:id", middleware.AuthMiddleware(teacher, admin), modulecontroller.DeleteModule)
 
-	// Sub-Module	
+	// Item-Module
 	classRoutes.GET("/item-modules/:id", middleware.AuthMiddleware(student, teacher), submodulecontroller.GetModuleItems)
 	classRoutes.GET("/item-module/:id", middleware.AuthMiddleware(student, teacher), submodulecontroller.GetModuleItemDetail)
 
@@ -75,6 +76,15 @@ func SetupRoutes(r *gin.Engine) {
 	classRoutes.POST("/category", middleware.AuthMiddleware(admin), classcategorycontroller.Create)
 	classRoutes.PUT("/category/:id", middleware.AuthMiddleware(admin), classcategorycontroller.Update)
 	classRoutes.DELETE("/category/:id", middleware.AuthMiddleware(admin), classcategorycontroller.Delete)
+
+	//========================================================================================================
+
+	// Leaderboard Routes
+	leaderboardRoutes := apiRoutes.Group("/leaderboard")
+
+	leaderboardRoutes.GET("/", middleware.AuthMiddleware(student, teacher, admin), leaderboardcontroller.GetLeaderboard)
+	leaderboardRoutes.GET("/top", middleware.AuthMiddleware(student, teacher, admin), leaderboardcontroller.GetTopUsers)
+	leaderboardRoutes.GET("/user/:id", middleware.AuthMiddleware(student, teacher, admin), leaderboardcontroller.GetUserRank)
 
 	//========================================================================================================
 

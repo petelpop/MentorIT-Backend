@@ -30,6 +30,12 @@ func SetupRoutes(r *gin.Engine) {
 	authRoutes.POST("/refresh-token", authcontroller.RefreshToken)
 	authRoutes.GET("/logout", authcontroller.Logout)
 
+	// Password reset routes
+	authRoutes.POST("/reset-password", middleware.AuthMiddleware(student, teacher, admin), authcontroller.ResetPassword)
+	authRoutes.POST("/forgot-password", authcontroller.ForgotPassword)
+	authRoutes.POST("/reset-password-with-token", authcontroller.ResetPasswordWithToken)
+	// authRoutes.GET("/test-email-config", middleware.AuthMiddleware(admin), authcontroller.TestEmailConfig)
+
 	//========================================================================================================
 
 	// Class Routes

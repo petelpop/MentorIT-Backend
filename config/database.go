@@ -40,6 +40,7 @@ func ConnectDatabase()  {
 		&models.QuizQuestion{},
 		&models.FinalProject{},
 		&models.ProjectPage{},
+		&models.ResetToken{},
 	)
 
 	DB = database
